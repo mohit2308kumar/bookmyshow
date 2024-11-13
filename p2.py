@@ -1,15 +1,16 @@
 import mysql.connector
+import os
 from datetime import datetime
 
 # Connect to the MySQL database
 def connect_db():
     return mysql.connector.connect(
         host="localhost",
-        user="root",
-        password="Mohit@2308#",
-        database="BookMyShow"
+        user=os.getenv("DBUSER"),
+        password=os.getenv("DBPASSWD"),
+        database=os.getenv("DBNAME")
     )
-
+    
 # Function to register a new user
 def register_user(username, password, email, phone):
     db = connect_db()
