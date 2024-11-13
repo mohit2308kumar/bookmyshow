@@ -1,10 +1,35 @@
-name: Run Python Script with MySQL
+name: Run Python Script with MySQL and inputs
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
+    inputs:
+      action:
+        description: 'Action to perform (register, view_movies, view_shows, book_seats, view_bookings)'
+        required: true
+      username:
+        description: 'Username for registration (required for register action)'
+        required: false
+      password:
+        description: 'Password for registration (required for register action)'
+        required: false
+      email:
+        description: 'Email for registration (required for register action)'
+        required: false
+      phone:
+        description: 'Phone number for registration (required for register action)'
+        required: false
+      movie_id:
+        description: 'Movie ID to view shows (required for view_shows action)'
+        required: false
+      user_id:
+        description: 'User ID for booking/viewing bookings (required for book_seats/view_bookings actions)'
+        required: false
+      show_id:
+        description: 'Show ID for booking seats (required for book_seats action)'
+        required: false
+      seat_ids:
+        description: 'Comma-separated list of seat IDs to book (required for book_seats action)'
+        required: false
 
 jobs:
   run-script:
@@ -29,4 +54,14 @@ jobs:
           DB_USER: ${{ secrets.DBUSER }}
           DB_PASSWORD: ${{ secrets.DBPASSWD }}
           DB_NAME: ${{ secrets.DBNAME }}
-        run: python p2.py
+        run: |
+          python p2.py
+            --action "${{ github.event.inputs.action }}" \
+            --username "${{ github.event.inputs.username }}" \
+            --password "${{ github.event.inputs.password }}" \
+            --email "${{ github.event.inputs.email }}" \
+            --phone "${{ github.event.inputs.phone }}" \
+            --movie_id "${{ github.event.inputs.movie_id }}" \
+            --user_id "${{ github.event.inputs.user_id }}" \
+            --show_id "${{ github.event.inputs.show_id }}" \
+            --seat_ids "${{ github.event.inputs.seat_ids }}"
